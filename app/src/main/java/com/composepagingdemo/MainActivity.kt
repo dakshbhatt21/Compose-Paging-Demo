@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
@@ -111,31 +113,38 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun ListItems(posts: LazyPagingItems<Post>, onItemTapped: (Post) -> Unit) {
-        LazyColumn {
-            items(posts) { post ->
-                Row(modifier = Modifier.clickable { if (post != null) onItemTapped(post) }) {
-                    AsyncImage(
-                        model = post?.image,
-                        contentDescription = null,
-                        modifier = Modifier.width(96.dp),
-                        contentScale = ContentScale.Inside,
-                        alignment = Alignment.TopCenter
-                    )
-                    Text(
-                        text = post?.title.orEmpty(),
-                        fontSize = 12.sp
-                    )
-                }
-                Divider(color = Color.Black)
-            }
-
-            posts.apply {
-                when {
-                    loadState.refresh is LoadState.Loading -> {
-                        item { LoadingItem() }
+        val listState: LazyListState = rememberLazyListState()
+        // logic to remember the index while navigation
+        when (posts.itemCount) {
+            0 -> LoadingItem()
+            else -> {
+                LazyColumn(state = listState) {
+                    items(items = posts) { post ->
+                        Row(modifier = Modifier.clickable { if (post != null) onItemTapped(post) }) {
+                            AsyncImage(
+                                model = post?.image,
+                                contentDescription = null,
+                                modifier = Modifier.width(96.dp),
+                                contentScale = ContentScale.Inside,
+                                alignment = Alignment.TopCenter
+                            )
+                            Text(
+                                text = post?.title.orEmpty(),
+                                fontSize = 12.sp
+                            )
+                        }
+                        Divider(color = Color.Black)
                     }
-                    loadState.append is LoadState.Loading -> {
-                        item { LoadingItem() }
+
+                    posts.apply {
+                        when {
+                            loadState.refresh is LoadState.Loading -> {
+                                item { LoadingItem() }
+                            }
+                            loadState.append is LoadState.Loading -> {
+                                item { LoadingItem() }
+                            }
+                        }
                     }
                 }
             }
