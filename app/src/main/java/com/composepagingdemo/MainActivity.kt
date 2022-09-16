@@ -1,7 +1,6 @@
 package com.composepagingdemo
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -119,7 +118,7 @@ class MainActivity : ComponentActivity() {
                         alignment = Alignment.TopCenter
                     )
                     Text(
-                        text = post?.title?.title.orEmpty(),
+                        text = post?.title.orEmpty(),
                         fontSize = 12.sp
                     )
                 }
@@ -146,7 +145,6 @@ class MainActivity : ComponentActivity() {
                         .padding(it),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Log.e("test", "post: ${post.description.description}")
                     Column {
                         AsyncImage(
                             model = post.image,
@@ -155,11 +153,11 @@ class MainActivity : ComponentActivity() {
                             alignment = Alignment.TopCenter
                         )
                         Text(
-                            text = post.title.title,
+                            text = post.title,
                             fontSize = 20.sp
                         )
                         HtmlText(
-                            html = post.description.description
+                            html = post.description
                         )
                     }
                 }
