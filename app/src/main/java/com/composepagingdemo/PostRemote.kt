@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PostRemote(
+    val id: Int,
     val title: Title,
     @SerialName("excerpt")
     val description: Description,

@@ -1,6 +1,9 @@
 package com.composepagingdemo
 
+import android.app.Application
 import android.util.Log
+import androidx.paging.ExperimentalPagingApi
+import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -67,4 +70,16 @@ class AppModule {
     @Provides
     @Singleton
     fun providePostSource() = PostSource(providePostRepository())
+
+    @Singleton
+    @Provides
+    fun provideAppDatabase(app: Application): AppDatabase =
+        Room.databaseBuilder(app, AppDatabase::class.java, "AppDatabase").build()
+
+    @Singleton
+    @Provides
+    @ExperimentalPagingApi
+    fun providePostSyncRepository(
+        httpClient: HttpClient, appDatabase: AppDatabase
+    ): PostSyncRepository = PostSyncRepository(httpClient, appDatabase)
 }

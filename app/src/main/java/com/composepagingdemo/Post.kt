@@ -1,7 +1,14 @@
 package com.composepagingdemo
 
+import androidx.annotation.NonNull
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
 data class Post(
-    val title: String,
-    val description: String,
-    val image: String
+    @PrimaryKey(autoGenerate = true) @NonNull val postId: Int = 0,
+    @NonNull val id: Int,
+    @NonNull val title: String,
+    @NonNull val description: String,
+    @NonNull val image: String
 )

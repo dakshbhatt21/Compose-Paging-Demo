@@ -12,12 +12,15 @@ import kotlinx.coroutines.flow.Flow
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val postSource: PostSource
+    private val postSource: PostSource,
+    postSyncRepository: PostSyncRepository
 ) : ViewModel() {
 
     val posts: Flow<PagingData<Post>> = Pager(PagingConfig(pageSize = 10)) { postSource }
         .flow   // convert to Flow
         .cachedIn(viewModelScope) // cache data in viewmodel scope to avoid frequent api calls
+
+    val postsSync: Flow<PagingData<Post>> = postSyncRepository.getPosts()
 
     var post: Post? = null
 }
